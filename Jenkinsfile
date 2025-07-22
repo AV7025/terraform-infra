@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage('Checkout Code') {
       steps {
-        git 'https://github.com/AV7025/terraform-infra.git'
+        git branch: 'main', url: 'https://github.com/AV7025/terraform-infra.git'
       }
     }
 
@@ -23,25 +23,13 @@ pipeline {
 
     stage('Terraform Plan') {
       steps {
-        sh '''
-        terraform plan \
-          -var "subscription_id=${ARM_SUBSCRIPTION_ID}" \
-          -var "client_id=${ARM_CLIENT_ID}" \
-          -var "client_secret=${ARM_CLIENT_SECRET}" \
-          -var "tenant_id=${ARM_TENANT_ID}"
-        '''
+        sh 'terraform plan -var="subscription_id=$ARM_SUBSCRIPTION_ID" -var="client_id=$ARM_CLIENT_ID" -var="client_secret=$ARM_CLIENT_SECRET" -var="tenant_id=$ARM_TENANT_ID"'
       }
     }
 
     stage('Terraform Apply') {
       steps {
-        sh '''
-        terraform apply -auto-approve \
-          -var "subscription_id=${ARM_SUBSCRIPTION_ID}" \
-          -var "client_id=${ARM_CLIENT_ID}" \
-          -var "client_secret=${ARM_CLIENT_SECRET}" \
-          -var "tenant_id=${ARM_TENANT_ID}"
-        '''
+        sh 'terraform apply -auto-approve -var="subscription_id=$ARM_SUBSCRIPTION_ID" -var="client_id=$ARM_CLIENT_ID" -var="client_secret=$ARM_CLIENT_SECRET" -var="tenant_id=$ARM_TENANT_ID"'
       }
     }
   }
